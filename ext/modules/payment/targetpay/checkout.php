@@ -140,7 +140,9 @@ if ($stateRow["orders_status_id"] == constant('MODULE_PAYMENT_TARGETPAY' . $pay_
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     die();
 } elseif ($stateRow["orders_status_id"] == constant('MODULE_PAYMENT_TARGETPAY' . $pay_type . 'PAYMENT_CANCELLED')) {
-    $message = 'Je hebt je betaling geannuleerd, <br/><a href="checkout_payment.php">Klik hier om een andere betaalmethode te kiezen.</a>';
+    // $message = 'Je hebt je betaling geannuleerd, <br/><a href="checkout_payment.php">Klik hier om een andere betaalmethode te kiezen.</a>';
+    // Remove html due to wrong displaying message on frontend
+    $message = 'Je hebt je betaling geannuleerd. Klik hier om een andere betaalmethode te kiezen.';
     $bgcolor = '#FFE5C8';
     $bordercolor = '#FFC78C';
 } elseif ($stateRow["orders_status_id"] == constant('MODULE_PAYMENT_TARGETPAY' . $pay_type . 'PAYMENT_ERROR')) {

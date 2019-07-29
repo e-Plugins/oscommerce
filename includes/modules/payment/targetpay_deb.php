@@ -40,7 +40,7 @@ class targetpay_deb extends targetpayment
 
         $selection = array(
             'id' => $this->code,
-            'module' => $this->title,
+            'module' => $this->payment_icon,
             'fields' => array(
                 array(
                     'title' => $this->getConstant("MODULE_PAYMENT_TARGETPAY_".$this->config_code."_TEXT_ISSUER_SELECTION"),
@@ -61,14 +61,14 @@ class targetpay_deb extends targetpayment
         global $messageStack;
         if ($_POST["payment"] == 'targetpay_deb' && (! isset($_POST['countryID']) || ($_POST['countryID'] < 0))) {
             $messageStack->add_session('checkout_payment', $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_NO_ISSUER_SELECTED"));
-        
+
             $url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_NO_ISSUER_SELECTED")), 'SSL', true, false);
             echo '<script> location.replace("'.$url.'"); </script>';
             exit();
         }
-        
+
         $process_button = tep_draw_hidden_field('countryID', $_POST['countryID']) . MODULE_PAYMENT_TARGETPAY_EXPRESS_TEXT;
-        
+
         if (defined('BUTTON_CHECKOUT_TARGETPAY_ALT')) {
             $process_button .= tep_image_submit('targetpay.gif', BUTTON_CHECKOUT_TARGETPAY_ALT);
         }

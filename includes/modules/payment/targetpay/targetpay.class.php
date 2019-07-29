@@ -21,7 +21,7 @@
 class TargetPayCore
 {
     // Constants
-    const APP_ID = 'dw_oscommerce2.x_1.0.0';
+    const APP_ID = 'dw_oscommerce2.x_1.0.1';
 
     const MIN_AMOUNT = 84;
 
@@ -279,7 +279,8 @@ class TargetPayCore
         $url .= "&bank=" . urlencode($this->bankId);
         $url .= "&amount=" . urlencode($this->amount);
         $url .= "&description=" . urlencode($this->description);
-        $url .= "&test=" . $this->testMode;
+        // Remove testmode parameter
+        //$url .= "&test=" . $this->testMode;
         $url .= "&userip=" . urlencode($_SERVER["REMOTE_ADDR"]);
         $url .= "&domain=" . urlencode($_SERVER["HTTP_HOST"]);
         $url .= "&returnurl=" . urlencode($this->returnUrl);
@@ -638,5 +639,25 @@ class TargetPayCore
     public function getTransactionId()
     {
         return $this->transactionId;
+    }
+
+    /**
+     * Reformat URL if add wrong params
+     * @param $url
+     * @return string
+     */
+    public static function formatOscommerceUrl($url)
+    {
+        $separator = "?";
+        if(substr_count($url, $separator) > 1) {
+            $url_array = explode($separator, $url);
+            $url = "";
+            foreach ($url_array as $url_item) {
+                $url = $url . $url_item . $separator;
+                $separator = "&";
+            }
+            $url = substr($url, 0, strlen($url) - 1);
+        }
+        return $url;
     }
 }

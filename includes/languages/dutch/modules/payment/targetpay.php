@@ -9,8 +9,11 @@
  */
 
 // DEFAULT
-define('MODULE_PAYMENT_TARGETPAY_TEXT_TITLE', 'iDEAL');
+define('MODULE_PAYMENT_TARGETPAY_TEXT_TITLE', 'Digiwallet - iDEAL');
+define('MODULE_PAYMENT_TARGETPAY_TEXT_PUBLIC_TITLE', 'iDEAL');
 define('MODULE_PAYMENT_TARGETPAY_TEXT_DESCRIPTION', 'iDeal via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
+define('MODULE_PAYMENT_TARGETPAY_TESTMODE_WARNING_MESSAGE', '<br/><br/><b>Note:</b> You can enable test-mode for your outlet from your DigiWallet Organization Dashboard to test your payments through the DigiWallet Test Panel.<br/><br/>');
+
 
 define('MODULE_PAYMENT_TARGETPAY_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
 define('MODULE_PAYMENT_TARGETPAY_TEXT_ISSUER_SELECTION_SEPERATOR', '---Overige banken---');
@@ -33,7 +36,8 @@ define('MODULE_PAYMENT_TARGETPAY_ERROR_AMOUNT_TO_LOW', 'Het bedrag is te laag vo
 define('MODULE_PAYMENT_TARGETPAY_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd geen transactienummer gevonden.');
 
 // IDE ========================================================================
-define('MODULE_PAYMENT_TARGETPAY_IDE_TEXT_TITLE', 'iDEAL');
+define('MODULE_PAYMENT_TARGETPAY_IDE_TEXT_TITLE', 'Digiwallet - iDEAL');
+define('MODULE_PAYMENT_TARGETPAY_IDE_TEXT_PUBLIC_TITLE', 'iDEAL');
 define('MODULE_PAYMENT_TARGETPAY_IDE_TEXT_DESCRIPTION', 'iDeal via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_IDE_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -57,7 +61,8 @@ define('MODULE_PAYMENT_TARGETPAY_IDE_ERROR_AMOUNT_TO_LOW', 'Het bedrag is te laa
 define('MODULE_PAYMENT_TARGETPAY_IDE_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd geen transactienummer gevonden.');
 
 // CC =======================================================================
-define('MODULE_PAYMENT_TARGETPAY_CC_TEXT_TITLE', 'Visa/Mastercard');
+define('MODULE_PAYMENT_TARGETPAY_CC_TEXT_TITLE', 'Digiwallet - Visa/Mastercard');
+define('MODULE_PAYMENT_TARGETPAY_CC_TEXT_PUBLIC_TITLE', 'Visa/Mastercard');
 define('MODULE_PAYMENT_TARGETPAY_CC_TEXT_DESCRIPTION', 'Visa/Mastercard via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_CC_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -81,7 +86,8 @@ define('MODULE_PAYMENT_TARGETPAY_CC_ERROR_AMOUNT_TO_LOW', 'Het bedrag is te laag
 define('MODULE_PAYMENT_TARGETPAY_CC_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd geen transactienummer gevonden.');
 
 // WAL ====================================================================
-define('MODULE_PAYMENT_TARGETPAY_WAL_TEXT_TITLE', 'PaysafeCard');
+define('MODULE_PAYMENT_TARGETPAY_WAL_TEXT_TITLE', 'Digiwallet - PaysafeCard');
+define('MODULE_PAYMENT_TARGETPAY_WAL_TEXT_PUBLIC_TITLE', 'PaysafeCard');
 define('MODULE_PAYMENT_TARGETPAY_WAL_TEXT_DESCRIPTION', 'PaysafeCard via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_WAL_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -105,7 +111,8 @@ define('MODULE_PAYMENT_TARGETPAY_WAL_ERROR_AMOUNT_TO_LOW', 'Het bedrag is te laa
 define('MODULE_PAYMENT_TARGETPAY_WAL_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd geen transactienummer gevonden.');
 
 // DEB ======================================================================
-define('MODULE_PAYMENT_TARGETPAY_DEB_TEXT_TITLE', 'Sofort');
+define('MODULE_PAYMENT_TARGETPAY_DEB_TEXT_TITLE', 'Digiwallet - Sofort');
+define('MODULE_PAYMENT_TARGETPAY_DEB_TEXT_PUBLIC_TITLE', 'Sofort');
 define('MODULE_PAYMENT_TARGETPAY_DEB_TEXT_DESCRIPTION', 'Sofort via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_DEB_TEXT_ISSUER_SELECTION', 'Kies uw land...');
@@ -129,7 +136,8 @@ define('MODULE_PAYMENT_TARGETPAY_DEB_ERROR_AMOUNT_TO_LOW', 'Het bedrag is te laa
 define('MODULE_PAYMENT_TARGETPAY_DEB_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd geen transactienummer gevonden.');
 
 // MRC =======================================================================
-define('MODULE_PAYMENT_TARGETPAY_MRC_TEXT_TITLE', 'Bancontact');
+define('MODULE_PAYMENT_TARGETPAY_MRC_TEXT_TITLE', 'Digiwallet - Bancontact');
+define('MODULE_PAYMENT_TARGETPAY_MRC_TEXT_PUBLIC_TITLE', 'Bancontact');
 define('MODULE_PAYMENT_TARGETPAY_MRC_TEXT_DESCRIPTION', 'Bancontact via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_MRC_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -154,7 +162,8 @@ define('MODULE_PAYMENT_TARGETPAY_MRC_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd gee
 
 
 // AFP =======================================================================
-define('MODULE_PAYMENT_TARGETPAY_AFP_TEXT_TITLE', 'Afterpay');
+define('MODULE_PAYMENT_TARGETPAY_AFP_TEXT_TITLE', 'Digiwallet - Afterpay');
+define('MODULE_PAYMENT_TARGETPAY_AFP_TEXT_PUBLIC_TITLE', 'Afterpay');
 define('MODULE_PAYMENT_TARGETPAY_AFP_TEXT_DESCRIPTION', 'Afterpay via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_AFP_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -179,7 +188,8 @@ define('MODULE_PAYMENT_TARGETPAY_AFP_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd gee
 
 
 // BW =======================================================================
-define('MODULE_PAYMENT_TARGETPAY_BW_TEXT_TITLE', 'Bankwire');
+define('MODULE_PAYMENT_TARGETPAY_BW_TEXT_TITLE', 'Digiwallet - Bankwire');
+define('MODULE_PAYMENT_TARGETPAY_BW_TEXT_PUBLIC_TITLE', 'Bankwire');
 define('MODULE_PAYMENT_TARGETPAY_BW_TEXT_DESCRIPTION', 'Overschrijvingen via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_BW_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -204,7 +214,8 @@ define('MODULE_PAYMENT_TARGETPAY_BW_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd geen
 
 
 // PYP =======================================================================
-define('MODULE_PAYMENT_TARGETPAY_PYP_TEXT_TITLE', 'PayPal');
+define('MODULE_PAYMENT_TARGETPAY_PYP_TEXT_TITLE', 'Digiwallet - PayPal');
+define('MODULE_PAYMENT_TARGETPAY_PYP_TEXT_PUBLIC_TITLE', 'PayPal');
 define('MODULE_PAYMENT_TARGETPAY_PYP_TEXT_DESCRIPTION', 'PayPal via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_TARGETPAY_PYP_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -252,4 +263,4 @@ define('MODULE_PAYMENT_TARGETPAY_BANKWIRE_THANKYOU_PAGE',
     </p>
 </div>
 HTML
-    );
+);

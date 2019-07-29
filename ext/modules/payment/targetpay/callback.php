@@ -1,12 +1,12 @@
 <?php
 /**
  * Digiwallet Payment Module for osCommerce
-*
-* @copyright Copyright 2013-2014 Yellow Melon
-* @copyright Portions Copyright 2013 Paul Mathot
-* @copyright Portions Copyright 2003 osCommerce
-* @license   see LICENSE.TXT
-*/
+ *
+ * @copyright Copyright 2013-2014 Yellow Melon
+ * @copyright Portions Copyright 2013 Paul Mathot
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license   see LICENSE.TXT
+ */
 chdir('../../../../');
 require 'includes/application_top.php';
 require_once 'includes/classes/order.php';
@@ -76,7 +76,7 @@ if (tep_db_num_rows($transaction_query) > 0) {
             tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
 
-        $iTest = (constant("MODULE_PAYMENT_TARGETPAY" . $pay_type . "TESTACCOUNT") == "True") ? 1 : 0;
+        $iTest = false;//(constant("MODULE_PAYMENT_TARGETPAY" . $pay_type . "TESTACCOUNT") == "True") ? 1 : 0;
         $digiCore = new TargetPayCore(strtoupper(substr($transaction_info['issuer_id'], 0, 3)), $transaction_info['rtlo'], 'nl', $iTest);
 
         $params = [];
@@ -84,14 +84,21 @@ if (tep_db_num_rows($transaction_query) > 0) {
             $checksum_number = md5($trxid . $transaction_info['rtlo'] . $digiCore->getSalt());
             $params = ['checksum' => $checksum_number, 'once' => 0];
         }
+        // Using order from cache for full properties
+        $order = new order;
+        require(DIR_WS_CLASSES . 'order_total.php');
+        $order_total_modules = new order_total;
+        $order_totals = $order_total_modules->process();
 
+        // Re-init order info
         $order = new Order($order_id);
         // Check if the end-user is paid
 
         $testMode = false;
         $paymentIsPartial = false;
         $bw_paid_amount = 0;
-        if (constant('MODULE_PAYMENT_TARGETPAY' . $pay_type . 'TESTACCOUNT') == "True") { // Always OK
+        $isTestMode = false;//constant('MODULE_PAYMENT_TARGETPAY' . $pay_type . 'TESTACCOUNT') == "True";
+        if ($isTestMode) { // Always OK
             $paidStatus = true;
             $testMode = true;
         } else {
@@ -109,7 +116,7 @@ if (tep_db_num_rows($transaction_query) > 0) {
                 } elseif (strtolower($status) == "rejected") {
                     list ($invoiceKey, $invoicePaymentReference, $status, $reject_reason, $reject_messages) = explode("|", $result);
                     // Show error message
-                    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(constant("MODULE_PAYMENT_TARGETPAY_" . $pay_type . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . " " . $reject_reason), 'SSL', true, false));
+                    tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(constant("MODULE_PAYMENT_TARGETPAY_" . $pay_type . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . " " . $reject_reason), 'SSL', true, false)));
                     exit(0);
                 }
             }
@@ -218,8 +225,16 @@ if (tep_db_num_rows($transaction_query) > 0) {
                             $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
                         }
                         $attributes_values = tep_db_fetch_array($attributes);
-
-                        $products_ordered_attributes .= "\n\t" . $attributes_values['products_options_name'] . ' ' . $attributes_values['products_options_values_name'];
+                        if(!empty($attributes_values)) {
+                            $products_ordered_attributes .= "\n\t" . $attributes_values['products_options_name'] . ' ' . $attributes_values['products_options_values_name'];
+                        } else {
+                            if(!empty($order->products[$i]['attributes'][$j]['option'])) {
+                                $products_ordered_attributes .= "\n\t" . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'];
+                                if(!empty($order->products[$i]['attributes'][$j]['prefix']) && !empty($order->products[$i]['attributes'][$j]['price'])) {
+                                    $products_ordered_attributes .= " (" . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price']) . ")";
+                                }
+                            }
+                        }
                     }
                 }
                 // ------insert customer choosen option eof ----
@@ -250,12 +265,14 @@ if (tep_db_num_rows($transaction_query) > 0) {
                 define('TEXT_EMAIL_VIA', 'via');
             }
 
-            $email_order = STORE_NAME . "\n" . EMAIL_SEPARATOR . "\n" . EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" . EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" . EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
+            $email_order = STORE_NAME . "\n" . EMAIL_SEPARATOR . "\n" . EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" . EMAIL_TEXT_INVOICE_URL . ' ' . TargetPayCore::formatOscommerceUrl(tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false)) . "\n" . EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
             if ($order->info['comments']) {
                 $email_order .= tep_db_output($order->info['comments']) . "\n\n";
             }
 
+
             $email_order .= EMAIL_TEXT_PRODUCTS . "\n" . EMAIL_SEPARATOR . "\n" . $products_ordered . EMAIL_SEPARATOR . "\n";
+
 
             for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
                 $email_order .= strip_tags($order_totals[$i]['title']) . ' ' . strip_tags($order_totals[$i]['text']) . "\n";
@@ -283,11 +300,11 @@ if (tep_db_num_rows($transaction_query) > 0) {
             $cart->remove_all();
             if($cancel){
                 // Redirect to checkout page
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL', true, false));
+                tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL', true, false)));
                 exit(0);
             } else if($finished){
                 // Redirect to checkout page
-                tep_redirect(tep_href_link('ext/modules/payment/targetpay/checkout.php?type=' . $_REQUEST["type"] . '&trxid=' . $trxid, '', 'SSL'));
+                tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/checkout.php', '', 'SSL') . ('?type=' . $_REQUEST["type"] . '&trxid=' . $trxid)));
                 exit(0);
             }
 
@@ -350,11 +367,11 @@ if (tep_db_num_rows($transaction_query) > 0) {
 }
 if($cancel){
     // Redirect to checkout page
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+    tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false)));
     exit(0);
 } else if($finished){
     // Redirect to checkout page
-    tep_redirect(tep_href_link('ext/modules/payment/targetpay/checkout.php?type=' . $_REQUEST["type"] . '&trxid=' . $trxid, '', 'SSL'));
+    tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/checkout.php', '', 'SSL') . ('?type=' . $_REQUEST["type"] . '&trxid=' . $trxid)));
     exit(0);
 }
 echo '45000';

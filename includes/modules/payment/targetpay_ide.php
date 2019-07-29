@@ -32,12 +32,12 @@ class targetpay_ide extends targetpayment
         if (! is_null($directory)) {
             $issuers = array();
             $issuerType = "Short";
-            
+
             $issuers[] = array(
                 'id' => "-1",
                 'text' => $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TEXT_ISSUER_SELECTION")
             );
-            
+
             foreach ($directory as $issuer) {
                 if ($issuer->issuerList != $issuerType) {
                     $issuerType = $issuer->issuerList;
@@ -47,10 +47,10 @@ class targetpay_ide extends targetpayment
                     'text' => $issuer->issuerName
                 );
             }
-            
+
             $selection = array(
                 'id' => $this->code,
-                'module' => $this->title, // $this->title . " ".$this->getConstant("MODULE_PAYMENT_TARGETPAY_".$this->config_code."_TEXT_INFO")
+                'module' => $this->payment_icon, // $this->title . " ".$this->getConstant("MODULE_PAYMENT_TARGETPAY_".$this->config_code."_TEXT_INFO")
                 'fields' => array(
                     array(
                         'title' => $this->getConstant("MODULE_PAYMENT_TARGETPAY_".$this->config_code."_TEXT_ISSUER_SELECTION"),
@@ -71,14 +71,14 @@ class targetpay_ide extends targetpayment
         global $messageStack;
         if ($_POST["payment"] == 'targetpay_ide' && (! isset($_POST['bankID']) || ($_POST['bankID'] < 0))) {
             $messageStack->add_session('checkout_payment', $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_NO_ISSUER_SELECTED"));
-            
+
             $url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_NO_ISSUER_SELECTED")), 'SSL', true, false);
             echo '<script> location.replace("'.$url.'"); </script>';
             exit();
         }
-        
+
         $process_button = tep_draw_hidden_field('bankID', $_POST['bankID']) . $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_EXPRESS_TEXT");
-        
+
         if (defined('BUTTON_CHECKOUT_TARGETPAY_ALT')) {
             $process_button .= tep_image_submit('targetpay.gif', BUTTON_CHECKOUT_TARGETPAY_ALT);
         }

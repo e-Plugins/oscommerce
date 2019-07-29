@@ -1,12 +1,12 @@
 <?php
 /**
  * Digiwallet Payment Module for osCommerce
-*
-* @copyright Copyright 2013-2014 Yellow Melon
-* @copyright Portions Copyright 2013 Paul Mathot
-* @copyright Portions Copyright 2003 osCommerce
-* @license   see LICENSE.TXT
-*/
+ *
+ * @copyright Copyright 2013-2014 Yellow Melon
+ * @copyright Portions Copyright 2013 Paul Mathot
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license   see LICENSE.TXT
+ */
 $ywincludefile = realpath(dirname(__FILE__) . '/targetpay/targetpayment.class.php');
 require_once $ywincludefile;
 
@@ -126,11 +126,20 @@ class targetpay_afp extends targetpayment
      */
     private static function breakDownStreet($street)
     {
-        $out = [];
+        $out = [
+            'street' => null,
+            'houseNumber' => null,
+            'houseNumberAdd' => null,
+        ];
         $addressResult = null;
         preg_match("/(?P<address>\D+) (?P<number>\d+) (?P<numberAdd>.*)/", $street, $addressResult);
         if(!$addressResult) {
             preg_match("/(?P<address>\D+) (?P<number>\d+)/", $street, $addressResult);
+        }
+        if (empty($addressResult)) {
+            $out['street'] = $street;
+
+            return $out;
         }
         $out['street'] = array_key_exists('address', $addressResult) ? $addressResult['address'] : null;
         $out['houseNumber'] = array_key_exists('number', $addressResult) ? $addressResult['number'] : null;
@@ -181,16 +190,15 @@ class targetpay_afp extends targetpayment
             }
         }
 
-        $iTest = ($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
+        $iTest = false;//($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
         $objDigiCore = new TargetPayCore($payment_issuer, $this->rtlo, 'nl', $iTest);
         $objDigiCore->setAmount($payment_amount);
         $objDigiCore->setDescription($payment_description);
-        $objDigiCore->bindParam('email', $order->customer['email_address']);
         $objDigiCore->bindParam('userip', $_SERVER["REMOTE_ADDR"]);
 
-        $objDigiCore->setReturnUrl(tep_href_link('ext/modules/payment/targetpay/callback.php') . '?finished=1&type=' . $this->config_code, '', 'SSL');
-        $objDigiCore->setReportUrl(tep_href_link('ext/modules/payment/targetpay/callback.php') . '?type=' . $this->config_code, '', 'SSL');
-        $objDigiCore->setCancelUrl(tep_href_link('ext/modules/payment/targetpay/callback.php') . '?cancel=1&type=' . $this->config_code, '', 'SSL');
+        $objDigiCore->setReturnUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php', '', 'SSL') . '?finished=1&type=' . $this->config_code));
+        $objDigiCore->setReportUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php', '', 'SSL') . '?type=' . $this->config_code));
+        $objDigiCore->setCancelUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php', '', 'SSL') . '?cancel=1&type=' . $this->config_code));
         // Add product infomation
         // Adding more information for Afterpay method
         $b_country = $order->billing['country']['iso_code_3'];
@@ -198,29 +206,55 @@ class targetpay_afp extends targetpayment
         $b_country = (strtoupper($b_country) == 'BE' ? 'BEL' : 'NLD');
         $s_country = (strtoupper($s_country) == 'BE' ? 'BEL' : 'NLD');
         // Build billing address
-        $streetParts = self::breakDownStreet($order->billing['street_address']);
+        if (
+            (isset($order->billing['adresnummer']) && !empty($order->billing['adresnummer']))
+            ||
+            (isset($order->billing['huisnummertoevoeging']) && !empty($order->billing['huisnummertoevoeging']))
+        ) {
+            $streetParts = [
+                'street' => $order->billing['street_address'],
+                'houseNumber' => $order->billing['adresnummer'],
+                'houseNumberAdd' => $order->billing['huisnummertoevoeging'],
+            ];
+        } else {
+            $streetParts = self::breakDownStreet($order->billing['street_address']);
+        }
         $objDigiCore->bindParam('billingstreet', empty($streetParts['street']) ? $order->billing['street_address'] : $streetParts['street']);
-        $objDigiCore->bindParam('billinghousenumber', $streetParts['houseNumber'].$streetParts['houseNumberAdd']);
+        $objDigiCore->bindParam('billinghousenumber', (!empty($streetParts['houseNumber']) || !empty($streetParts['houseNumberAdd'])) ? ($streetParts['houseNumber'] . ' ' . $streetParts['houseNumberAdd']) : $order->billing['street_address']);
         $objDigiCore->bindParam('billingpostalcode', $order->billing['postcode']);
         $objDigiCore->bindParam('billingcity', $order->billing['city']);
         $objDigiCore->bindParam('billingpersonemail', $order->customer['email_address']);
-        $objDigiCore->bindParam('billingpersoninitials', "");
+        $objDigiCore->bindParam('billingpersoninitials', ((!empty($order->billing['firstname'])) ? substr($order->billing['firstname'], 0, 1) : ""));
         $objDigiCore->bindParam('billingpersongender', $customer_gender);
-        $objDigiCore->bindParam('billingpersonsurname', trim($order->billing['lastname'] . (!empty($order->billing['firstname'])) ? " " . $order->billing['firstname'] : ""));
+        $objDigiCore->bindParam('billingpersonfirstname', $order->billing['firstname']);
+        $objDigiCore->bindParam('billingpersonsurname',  $order->billing['lastname']);
         $objDigiCore->bindParam('billingcountrycode', $b_country);
         $objDigiCore->bindParam('billingpersonlanguagecode', $b_country);
         $objDigiCore->bindParam('billingpersonbirthdate', $customer_bod);
         $objDigiCore->bindParam('billingpersonphonenumber', $order->customer['telephone']);
         // Build shipping address
-        $streetParts = self::breakDownStreet($order->delivery['street_address']);
+        if (
+            (isset($order->delivery['adresnummer']) && !empty($order->delivery['adresnummer']))
+            ||
+            (isset($order->delivery['huisnummertoevoeging']) && !empty($order->delivery['huisnummertoevoeging']))
+        ) {
+            $streetParts = [
+                'street' => $order->delivery['street_address'],
+                'houseNumber' => $order->delivery['adresnummer'],
+                'houseNumberAdd' => $order->delivery['huisnummertoevoeging'],
+            ];
+        } else {
+            $streetParts = self::breakDownStreet($order->delivery['street_address']);
+        }
         $objDigiCore->bindParam('shippingstreet', empty($streetParts['street']) ? $order->delivery['street_address'] : $streetParts['street']);
-        $objDigiCore->bindParam('shippinghousenumber', $streetParts['houseNumber'].$streetParts['houseNumberAdd']);
+        $objDigiCore->bindParam('shippinghousenumber', (!empty($streetParts['houseNumber']) || !empty($streetParts['houseNumberAdd'])) ? ($streetParts['houseNumber'] . ' ' . $streetParts['houseNumberAdd']) : $order->delivery['street_address']);
         $objDigiCore->bindParam('shippingpostalcode',  $order->delivery['postcode']);
         $objDigiCore->bindParam('shippingcity',  $order->delivery['city']);
         $objDigiCore->bindParam('shippingpersonemail',  $order->customer['email_address']);
-        $objDigiCore->bindParam('shippingpersoninitials', "");
+        $objDigiCore->bindParam('shippingpersoninitials', ((!empty($order->delivery['firstname'])) ? substr($order->delivery['firstname'], 0, 1) : ""));
         $objDigiCore->bindParam('shippingpersongender', $customer_gender);
-        $objDigiCore->bindParam('shippingpersonsurname',  trim($order->delivery['lastname'] . (!empty($order->delivery['firstname'])) ? " " . $order->delivery['firstname'] : ""));
+        $objDigiCore->bindParam('shippingpersonfirstname', $order->delivery['firstname']);
+        $objDigiCore->bindParam('shippingpersonsurname',  $order->delivery['lastname']);
         $objDigiCore->bindParam('shippingcountrycode', $s_country);
         $objDigiCore->bindParam('shippingpersonlanguagecode', $s_country);
         $objDigiCore->bindParam('shippingpersonbirthdate', $customer_bod);
@@ -255,12 +289,16 @@ class targetpay_afp extends targetpayment
         if($invoice_lines != null && !empty($invoice_lines)){
             $objDigiCore->bindParam('invoicelines', json_encode($invoice_lines));
         }
+        // Consumer's email address
+        if(isset($order->customer['email_address']) && !empty($order->customer['email_address'])) {
+            $objDigiCore->bindParam("email", $order->customer['email_address']);
+        }
 
         $result = @$objDigiCore->startPayment();
 
         if ($result === false) {
             $messageStack->add_session('checkout_payment', $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . "<br/>" . $objDigiCore->getErrorMessage());
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . " " . $objDigiCore->getErrorMessage()), 'SSL', true, false));
+            tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . " " . $objDigiCore->getErrorMessage()), 'SSL', true, false)));
             exit(0);
         }
 
@@ -323,7 +361,7 @@ class targetpay_afp extends targetpayment
             if (strtolower($status) == "rejected") {
                 // Show the error message
                 $messageStack->add_session('checkout_payment', $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . "<br/>" . $ext_info);
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . " " . $ext_info), 'SSL', true, false));
+                tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING") . " " . $ext_info), 'SSL', true, false)));
                 exit(0);
             } else {
                 // Redirect to enrichment URL

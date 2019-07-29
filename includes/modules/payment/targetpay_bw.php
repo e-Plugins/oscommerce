@@ -1,12 +1,12 @@
 <?php
 /**
  * Digiwallet Payment Module for osCommerce
-*
-* @copyright Copyright 2013-2014 Yellow Melon
-* @copyright Portions Copyright 2013 Paul Mathot
-* @copyright Portions Copyright 2003 osCommerce
-* @license   see LICENSE.TXT
-*/
+ *
+ * @copyright Copyright 2013-2014 Yellow Melon
+ * @copyright Portions Copyright 2013 Paul Mathot
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license   see LICENSE.TXT
+ */
 $ywincludefile = realpath(dirname(__FILE__) . '/targetpay/targetpayment.class.php');
 require_once $ywincludefile;
 
@@ -54,17 +54,20 @@ class targetpay_bw extends targetpayment
         if (empty($payment_description)) {
             $payment_description = 'nvt';
         }
-        $iTest = ($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
+        $iTest = false;//($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
         $objDigiCore = new TargetPayCore($payment_issuer, $this->rtlo, 'nl', $iTest);
         $objDigiCore->setAmount($payment_amount);
         $objDigiCore->setDescription($payment_description);
-        $objDigiCore->bindParam('email', $order->customer['email_address']);
         $objDigiCore->bindParam('userip', $_SERVER["REMOTE_ADDR"]);
 
-        $objDigiCore->setReturnUrl(tep_href_link('ext/modules/payment/targetpay/callback.php') . '?finished=1&type=' . $this->config_code, '', 'SSL');
-        $objDigiCore->setReportUrl(tep_href_link('ext/modules/payment/targetpay/callback.php') . '?checksum=1&type=' . $this->config_code, '', 'SSL');
-        $objDigiCore->setCancelUrl(tep_href_link('ext/modules/payment/targetpay/callback.php') . '?cancel=1&type=' . $this->config_code, '', 'SSL');
-        // Add product infomation
+        $objDigiCore->setReturnUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php', '', 'SSL') . '?finished=1&type=' . $this->config_code));
+        $objDigiCore->setReportUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php', '', 'SSL') . '?checksum=1&type=' . $this->config_code));
+        $objDigiCore->setCancelUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php', '', 'SSL') . '?cancel=1&type=' . $this->config_code));
+
+        // Consumer's email address
+        if(isset($order->customer['email_address']) && !empty($order->customer['email_address'])) {
+            $objDigiCore->bindParam("email", $order->customer['email_address']);
+        }
 
         $result = @$objDigiCore->startPayment();
 
@@ -149,7 +152,7 @@ class targetpay_bw extends targetpayment
         // Set order as success
 
         // Show information page
-        tep_redirect(tep_href_link("bankwire_success.php?trxid=" . $this->transactionID, '', 'SSL', true, false));
+        tep_redirect(TargetPayCore::formatOscommerceUrl(tep_href_link("bankwire_success.php?trxid=" . $this->transactionID, '', 'SSL', true, false)));
         exit(0);
     }
 }

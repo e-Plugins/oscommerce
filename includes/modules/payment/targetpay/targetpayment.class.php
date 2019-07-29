@@ -1,12 +1,12 @@
 <?php
 /**
  * Digiwallet Payment Module for osCommerce
-*
-* @copyright Copyright 2013-2014 Yellow Melon
-* @copyright Portions Copyright 2013 Paul Mathot
-* @copyright Portions Copyright 2003 osCommerce
-* @license   see LICENSE.TXT
-*/
+ *
+ * @copyright Copyright 2013-2014 Yellow Melon
+ * @copyright Portions Copyright 2013 Paul Mathot
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license   see LICENSE.TXT
+ */
 $ywincludefile = realpath(dirname(__FILE__) . '/../../../extra_datafiles/targetpay.php');
 require_once $ywincludefile;
 
@@ -18,11 +18,16 @@ require_once $ywincludefile;
 
 class targetpayment
 {
+
     const DEFAULT_RTLO = 93929;
 
     public $code;
 
     public $title;
+
+    public $public_title;
+
+    public $payment_icon;
 
     public $description;
 
@@ -67,8 +72,10 @@ class targetpayment
         global $order;
 
         $this->code = 'targetpay_' . strtolower($this->config_code);
-        $this->title = tep_image('images/icons/' . $this->config_code . '_50.png', '', '', '', 'align=absmiddle'); // $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TEXT_TITLE");
-        $this->description = $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TEXT_DESCRIPTION");
+        $this->title = $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TEXT_TITLE");
+        $this->public_title = $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TEXT_PUBLIC_TITLE");
+        $this->payment_icon = tep_image('images/icons/' . $this->config_code . '_50.png', '', '', '', 'align=absmiddle');
+        $this->description = $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TEXT_DESCRIPTION") . $this->getConstant("MODULE_PAYMENT_TARGETPAY_TESTMODE_WARNING_MESSAGE");
         $this->sort_order = $this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_SORT_ORDER");
         $this->enabled = (($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_STATUS") == 'True') ? true : false);
 
@@ -156,7 +163,7 @@ class targetpayment
     {
         return array(
             'id' => $this->code,
-            'module' => $this->title
+            'module' => $this->payment_icon
         );
     }
 
@@ -215,7 +222,7 @@ class targetpayment
             $payment_description = 'nvt';
         }
 
-        $iTest = ($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
+        $iTest = false;//($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
         $objDigiCore = new TargetPayCore($payment_issuer, $this->rtlo, 'nl', $iTest);
         $objDigiCore->setAmount($payment_amount);
         $objDigiCore->setDescription($payment_description);
@@ -227,9 +234,14 @@ class targetpayment
             $objDigiCore->setBankId($_POST['countryID']);
         }
 
-        $objDigiCore->setReturnUrl(tep_href_link('ext/modules/payment/targetpay/callback.php?type=' . $this->config_code, '', 'SSL') . "&finished=1");
-        $objDigiCore->setReportUrl(tep_href_link('ext/modules/payment/targetpay/callback.php?type=' . $this->config_code, '', 'SSL'));
-        $objDigiCore->setCancelUrl(tep_href_link('ext/modules/payment/targetpay/callback.php?type=' . $this->config_code, '', 'SSL') . "&cancel=1");
+        $objDigiCore->setReturnUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php?type=' . $this->config_code, '', 'SSL') . "&finished=1"));
+        $objDigiCore->setReportUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php?type=' . $this->config_code, '', 'SSL')));
+        $objDigiCore->setCancelUrl(TargetPayCore::formatOscommerceUrl(tep_href_link('ext/modules/payment/targetpay/callback.php?type=' . $this->config_code, '', 'SSL') . "&cancel=1"));
+
+        // Consumer's email address
+        if(isset($order->customer['email_address']) && !empty($order->customer['email_address'])) {
+            $objDigiCore->bindParam("email", $order->customer['email_address']);
+        }
 
         $result = @$objDigiCore->startPayment();
 
@@ -302,10 +314,10 @@ class targetpayment
             if (tep_session_is_registered('cart_digiwallet_id')) {
                 $order_id = substr($cart_digiwallet_id, strpos($cart_digiwallet_id, '-') + 1);
 
-                $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int) $order_id . "'");
+                $curr_check = tep_db_query("select currency, payment_method from " . TABLE_ORDERS . " where orders_id = '" . (int) $order_id . "'");
                 $curr = tep_db_fetch_array($curr_check);
 
-                if (($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_digiwallet_id, 0, strlen($cartID)))) {
+                if (($curr['currency'] != $order->info['currency']) || ($curr['payment_method'] != $order->info['payment_method']) || ($cartID != substr($cart_digiwallet_id, 0, strlen($cartID)))) {
                     $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int) $order_id . '" limit 1');
 
                     if (tep_db_num_rows($check_query) < 1) {
@@ -521,7 +533,7 @@ class targetpayment
             tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_ERROR_TEXT_ERROR_OCCURRED_PROCESSING")), 'SSL', true, false));
         }
 
-        $iTest = ($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
+        $iTest = false;//($this->getConstant("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") == "True") ? 1 : 0;
 
         $objDigiCore = new TargetPayCore($method, $this->rtlo, 'nl', $iTest);
         $status = @$objDigiCore->checkPayment($this->transactionID);
@@ -605,7 +617,8 @@ class targetpayment
 
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Digiwallet Outlet Identifier', '" . ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TARGETPAY_RTLO") . "', ".self::DEFAULT_RTLO.", 'The Digiwallet layout code', '6', '4', now())"); // Default Digiwallet
 
-        tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Testaccount?', '" . ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") . "', 'False', 'Enable testaccount (only for validation)?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        // Remove testmode setting
+        //tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Testaccount?', '" . ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT") . "', 'False', 'Enable testaccount (only for validation)?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
 
         //tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('IP address', '" . ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_REPAIR_IP") . "', '" . $_SERVER['REMOTE_ADDR'] . "', 'The IP address of the user (administrator) that is allowed to complete open ideal orders (if empty everyone will be allowed, which is not recommended!).', '6', '8', now())");
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable pre order emails','" . ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_EMAIL_ORDER_INIT") . "', 'False', 'Do you want emails to be sent to the store owner whenever an Digiwallet order is being initiated? The default is <strong>False</strong>.', '6', '17', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -704,7 +717,7 @@ class targetpayment
     {
         return array(
             ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TARGETPAY_RTLO"),
-            ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT"),
+            // ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_TESTACCOUNT"),
             ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_PAYMENT_ERROR"),
             ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_PREPARE_ORDER_STATUS_ID"),
             ("MODULE_PAYMENT_TARGETPAY_" . $this->config_code . "_PAYMENT_CANCELLED"),
