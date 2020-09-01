@@ -1,8 +1,7 @@
 # iDEAL plugin for OsCommerce 2.3+
 
 ## Usage
-Use this plugin to add support for iDEAL, Mister Cash, Sofort and other payment methods of 
-DigiWallet.com and Digiwallet.nl to your webstore. 
+Use this plugin to add support for iDEAL, Mister Cash, Sofort and other payment methods of DigiWallet.nl to your webstore. 
 
 ## Supported Paymethods
 | Paymethod	|   supported	| 
@@ -12,14 +11,16 @@ DigiWallet.com and Digiwallet.nl to your webstore.
 | Creditcard	|:heavy_check_mark:	|
 | Paysafecard	|:heavy_check_mark:	|
 | Sofort	|:heavy_check_mark:	|
+| GiroPay	|:heavy_check_mark:	|
+| EPS	|:heavy_check_mark:	|
 | Paypal	|:heavy_check_mark:	|
 | Afterpay	|:heavy_check_mark:	|
 | Bankwire	|:heavy_check_mark:	|
 
 ## Installation
 
-### 1. Set up a Digiwallet account
-Before you can use the plugin, please sign up for a Digiwallet account on www.digiwallet.nl
+### 1. Set up a DigiWallet account
+Before you can use the plugin, please sign up for a DigiWallet account on www.digiwallet.nl
 
 Note that the plugin can be used in a live environment only after it has been completed with your details and
 is approved by their compliance department. This would normally take about one working day. 
