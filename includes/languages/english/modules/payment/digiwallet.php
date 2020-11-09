@@ -188,6 +188,52 @@ define('MODULE_PAYMENT_DIGIWALLET_BW_ERROR_AMOUNT_TO_LOW', 'The amount is too lo
 define('MODULE_PAYMENT_DIGIWALLET_BW_ERROR_TEXT_NO_TRANSACTION_ID', 'No transaction ID was found.');
 
 
+
+// EPS ==========================================================================================
+define('MODULE_PAYMENT_DIGIWALLET_EPS_TEXT_TITLE', 'Digiwallet - EPS');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_TEXT_PUBLIC_TITLE', 'EPS');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_TEXT_DESCRIPTION', 'EPS via Digiwallet is the payment method via the Dutch banks: fast, safe, and simple.<br/><a href="https://www.digiwallet.nl" target="_blank">Get a Digiwallet account for free</a>');
+
+define('MODULE_PAYMENT_DIGIWALLET_EPS_TEXT_ISSUER_SELECTION', 'Choose your bank...');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_TEXT_ISSUER_SELECTION_SEPERATOR', '---Other banks---');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_TEXT_ORDERED_PRODUCTS', 'Order: ');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_TEXT_INFO', 'Safe online payment via the Dutch banks.');
+
+define('MODULE_PAYMENT_IDEAL_EXPRESS_TEXT', '<h3 id="iDealExpressText">Klik a.u.b. na betaling bij uw bank op "Volgende" zodat u terugkeert op onze site en uw order direct verwerkt kan worden!</h3>');
+
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_ERROR_OCCURRED_PROCESSING', 'An error occurred while processing your EPS transaction. Please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_ERROR_OCCURRED_STATUS_REQUEST', 'An error occurred while confirming the status of your EPS transaction. Please check whether the transaction has been completed via your online banking system and then contact the web store.');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_NO_ISSUER_SELECTED', 'No bank was selected; please select a bank or another payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_TRANSACTION_CANCELLED', 'The transaction was cancelled; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_TRANSACTION_EXPIRED', 'The transaction has expired; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_TRASACTION_FAILED', 'The transaction failed; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_UNKNOWN_STATUS', 'The transaction failed; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_AMOUNT_TO_LOW', 'The amount is too low for this paymetn type');
+define('MODULE_PAYMENT_DIGIWALLET_EPS_ERROR_TEXT_NO_TRANSACTION_ID', 'No transaction ID was found.');
+
+// GIP ==========================================================================================
+define('MODULE_PAYMENT_DIGIWALLET_GIP_TEXT_TITLE', 'Digiwallet - GiroPay');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_TEXT_PUBLIC_TITLE', 'GiroPay');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_TEXT_DESCRIPTION', 'GiroPay via Digiwallet is the payment method via the Dutch banks: fast, safe, and simple.<br/><a href="https://www.digiwallet.nl" target="_blank">Get a Digiwallet account for free</a>');
+
+define('MODULE_PAYMENT_DIGIWALLET_GIP_TEXT_ISSUER_SELECTION', 'Choose your bank...');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_TEXT_ISSUER_SELECTION_SEPERATOR', '---Other banks---');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_TEXT_ORDERED_PRODUCTS', 'Order: ');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_TEXT_INFO', 'Safe online payment via the Dutch banks.');
+
+define('MODULE_PAYMENT_IDEAL_EXPRESS_TEXT', '<h3 id="iDealExpressText">Klik a.u.b. na betaling bij uw bank op "Volgende" zodat u terugkeert op onze site en uw order direct verwerkt kan worden!</h3>');
+
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_ERROR_OCCURRED_PROCESSING', 'An error occurred while processing your GiroPay transaction. Please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_ERROR_OCCURRED_STATUS_REQUEST', 'An error occurred while confirming the status of your GiroPay transaction. Please check whether the transaction has been completed via your online banking system and then contact the web store.');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_NO_ISSUER_SELECTED', 'No bank was selected; please select a bank or another payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_TRANSACTION_CANCELLED', 'The transaction was cancelled; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_TRANSACTION_EXPIRED', 'The transaction has expired; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_TRASACTION_FAILED', 'The transaction failed; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_UNKNOWN_STATUS', 'The transaction failed; please select a payment method.');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_AMOUNT_TO_LOW', 'The amount is too low for this paymetn type');
+define('MODULE_PAYMENT_DIGIWALLET_GIP_ERROR_TEXT_NO_TRANSACTION_ID', 'No transaction ID was found.');
+
+
 // PYP ==========================================================================================
 define('MODULE_PAYMENT_DIGIWALLET_PYP_TEXT_TITLE', 'Digiwallet - PayPal');
 define('MODULE_PAYMENT_DIGIWALLET_PYP_TEXT_PUBLIC_TITLE', 'PayPal');

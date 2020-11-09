@@ -622,6 +622,7 @@ class digiwalletpayment
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Transaction description text', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_MERCHANT_TRANSACTION_DESCRIPTION_TEXT") . "', '" . TITLE . "', 'Description of transactions from this webshop. <strong>Should not be empty!</strong>.', '6', '8', now())");
 
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Digiwallet Outlet Identifier', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_RTLO") . "', ".self::DEFAULT_RTLO.", 'The Digiwallet layout code', '6', '4', now())"); // Default Digiwallet
+        tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Digiwallet API Token', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_API_TOKEN") . "', '', 'The Digiwallet API Token', '6', '4', now())"); // Default Digiwallet
 
         // Remove testmode setting
         //tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Testaccount?', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_TESTACCOUNT") . "', 'False', 'Enable testaccount (only for validation)?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -723,6 +724,7 @@ class digiwalletpayment
     {
         return array(
             ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_RTLO"),
+            ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_API_TOKEN"),
             // ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_TESTACCOUNT"),
             ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_PAYMENT_ERROR"),
             ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_PREPARE_ORDER_STATUS_ID"),
