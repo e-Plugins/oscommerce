@@ -10,9 +10,6 @@
         "ext-json": "*",
         "guzzlehttp/guzzle": "^6.3"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^8"
-    },
     "autoload": {
         "psr-4": {
             "Digiwallet\\Packages\\Transaction\\Client\\": "src/"
