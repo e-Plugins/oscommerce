@@ -19,6 +19,7 @@ class digiwallet_mrc extends digiwalletpayment
      */
     public function digiwallet_mrc()
     {
+        $this->sort_order = 2;
         $this->config_code = "MRC";
         parent::digiwalletpayment();
     }

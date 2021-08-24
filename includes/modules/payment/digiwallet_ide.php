@@ -19,6 +19,7 @@ class digiwallet_ide extends digiwalletpayment
      */
     public function digiwallet_ide()
     {
+        $this->sort_order = 1;
         $this->config_code = "IDE";
         parent::digiwalletpayment();
     }

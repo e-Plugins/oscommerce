@@ -19,6 +19,7 @@ class digiwallet_cc extends digiwalletpayment
      */
     public function digiwallet_cc()
     {
+        $this->sort_order = 10;
         $this->config_code = "CC";
         parent::digiwalletpayment();
     }

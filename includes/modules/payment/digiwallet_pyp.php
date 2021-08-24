@@ -19,6 +19,7 @@ class digiwallet_pyp extends digiwalletpayment
      */
     public function digiwallet_pyp()
     {
+        $this->sort_order = 8;
         $this->config_code = "PYP";
         parent::digiwalletpayment();
     }

@@ -25,7 +25,9 @@ require_once $ywincludefile;
 class digiwalletpayment
 {
 
-    const DEFAULT_RTLO = 93929;
+    const DEFAULT_RTLO = 156187;
+
+    const DEFAULT_DIGIWALLET_TOKEN = 'bf72755a648832f48f0995454';
 
     public $code;
 
@@ -39,7 +41,7 @@ class digiwalletpayment
 
     public $enabled;
 
-    public $sort_order;
+    public $sort_order = 0;
 
     public $rtlo;
 
@@ -82,7 +84,10 @@ class digiwalletpayment
         $this->public_title = $this->getConstant("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_TEXT_PUBLIC_TITLE");
         $this->payment_icon = tep_image('images/icons/' . $this->config_code . '_50.png', '', '', '', 'align=absmiddle');
         $this->description = $this->getConstant("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_TEXT_DESCRIPTION") . $this->getConstant("MODULE_PAYMENT_DIGIWALLET_TESTMODE_WARNING_MESSAGE");
-        $this->sort_order = $this->getConstant("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_SORT_ORDER");
+        $sort_order = $this->getConstant("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_SORT_ORDER");
+        if(!empty($sort_order)) {
+            $this->sort_order = $sort_order;
+        }
         $this->enabled = (($this->getConstant("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_STATUS") == 'True') ? true : false);
 
         $this->rtlo = $this->getConstant("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_RTLO");
@@ -615,14 +620,14 @@ class digiwalletpayment
     public function install()
     {
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Digiwallet payment module', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_STATUS") . "', 'True', 'Do you want to accept Digiwallet payments?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sortorder', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_SORT_ORDER") . "', '0', 'Sort order of payment methods in list. Lowest is displayed first.', '6', '2', now())");
+        tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sortorder', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_SORT_ORDER") . "', '".$this->sort_order."', 'Sort order of payment methods in list. Lowest is displayed first.', '6', '2', now())");
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment zone', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_ZONE") . "', '0', 'If a zone is selected, enable this payment method for that zone only.', '6', '3', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
 
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction description', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_TRANSACTION_DESCRIPTION") . "', 'Automatic', 'Select automatic for product name as description, or manual to use the text you supply below.', '6', '8', 'tep_cfg_select_option(array(\'Automatic\',\'Manual\'), ', now())");
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Transaction description text', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_MERCHANT_TRANSACTION_DESCRIPTION_TEXT") . "', '" . TITLE . "', 'Description of transactions from this webshop. <strong>Should not be empty!</strong>.', '6', '8', now())");
 
         tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Digiwallet Outlet Identifier', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_RTLO") . "', ".self::DEFAULT_RTLO.", 'The Digiwallet layout code', '6', '4', now())"); // Default Digiwallet
-        tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Digiwallet API Token', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_API_TOKEN") . "', '', 'The Digiwallet API Token', '6', '4', now())"); // Default Digiwallet
+        tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Digiwallet API Token', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_DIGIWALLET_API_TOKEN") . "', '".self::DEFAULT_DIGIWALLET_TOKEN."', 'The Digiwallet API Token', '6', '4', now())"); // Default Digiwallet
 
         // Remove testmode setting
         //tep_db_query("insert IGNORE into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Testaccount?', '" . ("MODULE_PAYMENT_DIGIWALLET_" . $this->config_code . "_TESTACCOUNT") . "', 'False', 'Enable testaccount (only for validation)?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");

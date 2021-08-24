@@ -12,7 +12,7 @@
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_TITLE', 'Digiwallet - iDEAL');
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_PUBLIC_TITLE', 'iDEAL');
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_DESCRIPTION', 'iDeal via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
-define('MODULE_PAYMENT_DIGIWALLET_TESTMODE_WARNING_MESSAGE', '<br/><br/><b>Note:</b> You can enable test-mode for your outlet from your DigiWallet Organization Dashboard to test your payments through the DigiWallet Test Panel.<br/><br/>');
+define('MODULE_PAYMENT_DIGIWALLET_TESTMODE_WARNING_MESSAGE', '<br/><br/><b>Note:</b> If you have a question or need any help, please visit https://www.digiwallet.com<br/><br/>');
 
 
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_ISSUER_SELECTION', 'Kies uw bank...');
@@ -188,8 +188,8 @@ define('MODULE_PAYMENT_DIGIWALLET_AFP_ERROR_TEXT_NO_TRANSACTION_ID', 'Er werd ge
 
 
 // BW =======================================================================
-define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_TITLE', 'Digiwallet - Bankwire');
-define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_PUBLIC_TITLE', 'Bankwire');
+define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_TITLE', 'Digiwallet - Bankwire - Overschrijving');
+define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_PUBLIC_TITLE', 'Bankwire - Overschrijving');
 define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_DESCRIPTION', 'Overschrijvingen via Digiwallet is het online betalingssysteem in Nederland: snel, veilig en eenvoudig.<br/><a href="https://www.digiwallet.nl" target="_blank">Vraag hier uw gratis Digiwallet account aan</a>');
 
 define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_ISSUER_SELECTION', 'Kies uw bank...');

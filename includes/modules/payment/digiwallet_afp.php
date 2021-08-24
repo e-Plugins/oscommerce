@@ -40,6 +40,7 @@ class digiwallet_afp extends digiwalletpayment
      */
     public function digiwallet_afp()
     {
+        $this->sort_order = 3;
         $this->config_code = "AFP";
         parent::digiwalletpayment();
     }

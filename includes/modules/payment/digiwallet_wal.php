@@ -19,6 +19,7 @@ class digiwallet_wal extends digiwalletpayment
      */
     public function digiwallet_wal()
     {
+        $this->sort_order = 7;
         $this->config_code = "WAL";
         parent::digiwalletpayment();
     }

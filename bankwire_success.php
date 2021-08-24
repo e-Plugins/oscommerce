@@ -8,7 +8,12 @@
     require_once 'includes/modules/payment/digiwallet/database_tables.php';
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  if(isset($oscTemplate)) {
+      require $oscTemplate->map_to_template('template_top.php', 'component');
+  } else {
+      require(DIR_WS_INCLUDES . 'template_top.php');
+  }
+
   require_once 'includes/modules/payment/digiwallet/digiwallet.class.php';  
   require_once 'includes/extra_datafiles/digiwallet.php';
   $availableLanguages = array("dutch","english");
@@ -83,7 +88,11 @@
          $bank
       );
    }
-   
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+
+    if(isset($oscTemplate)) {
+        require $oscTemplate->map_to_template('template_bottom.php', 'component');
+    } else {
+        require(DIR_WS_INCLUDES . 'template_bottom.php');
+    }
+    require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

@@ -18,6 +18,7 @@ class digiwallet_gip extends digiwalletClient
      */
     public function digiwallet_gip()
     {
+        $this->sort_order = 6;
         $this->config_code = "GIP";
         parent::digiwalletpayment();
     }

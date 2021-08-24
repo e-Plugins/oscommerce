@@ -12,7 +12,7 @@
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_TITLE', 'Digiwallet - iDEAL');
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_PUBLIC_TITLE', 'iDEAL');
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_DESCRIPTION', 'iDEAL via Digiwallet is the payment method via the Dutch banks: fast, safe, and simple.<br/><a href="https://www.digiwallet.nl" target="_blank">Get a Digiwallet account for free</a>');
-define('MODULE_PAYMENT_DIGIWALLET_TESTMODE_WARNING_MESSAGE', '<br/><br/><b>Note:</b> You can enable test-mode for your outlet from your DigiWallet Organization Dashboard to test your payments through the DigiWallet Test Panel.<br/><br/>');
+define('MODULE_PAYMENT_DIGIWALLET_TESTMODE_WARNING_MESSAGE', '<br/><br/><b>Note:</b> If you have a question or need any help, please visit https://www.digiwallet.com<br/><br/>');
 
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_ISSUER_SELECTION', 'Choose your bank...');
 define('MODULE_PAYMENT_DIGIWALLET_TEXT_ISSUER_SELECTION_SEPERATOR', '---Other banks---');
@@ -166,8 +166,8 @@ define('MODULE_PAYMENT_DIGIWALLET_AFP_ERROR_TEXT_NO_TRANSACTION_ID', 'No transac
 
 
 // BW ==========================================================================================
-define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_TITLE', 'Digiwallet - Overschrijvingen');
-define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_PUBLIC_TITLE', 'Overschrijvingen');
+define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_TITLE', 'Digiwallet - Bankwire - Overschrijving');
+define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_PUBLIC_TITLE', 'Bankwire - Overschrijving');
 define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_DESCRIPTION', 'Overschrijvingen via Digiwallet is the payment method via the Dutch banks: fast, safe, and simple.<br/><a href="https://www.digiwallet.nl" target="_blank">Get a Digiwallet account for free</a>');
 
 define('MODULE_PAYMENT_DIGIWALLET_BW_TEXT_ISSUER_SELECTION', 'Choose your bank...');

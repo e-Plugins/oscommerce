@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file     Provides support for Digiwallet iDEAL, Mister Cash and Sofort Banking
+ * @file     Provides support for Digiwallet iDEAL, Mister Cash and Sofort
 * @author     Yellow Melon B.V.
 * @url         http://www.idealplugins.nl
 * @release     11-09-2014
@@ -33,7 +33,7 @@ class DigiWalletCore
 
     const ERR_AMOUNT_TOO_HIGH = "Bedrag is te hoog | Amount is too high";
 
-    const ERR_NO_RTLO = "Geen DigiWallet Outlet Identifier bekend; controleer de module instellingen | No Digiwallet Outlet Identifier filled in, check the module settings";
+    const ERR_NO_RTLO = "Geen DigiWallet Outletcode bekend; controleer de module instellingen | No Digiwallet Outletcode filled in, check the module settings";
 
     const ERR_NO_TXID = "Er is een onjuist transactie ID opgegeven | An incorrect transaction ID was given";
 

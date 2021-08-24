@@ -18,6 +18,7 @@ class digiwallet_eps extends digiwalletClient
      */
     public function digiwallet_eps()
     {
+        $this->sort_order = 5;
         $this->config_code = "EPS";
         parent::digiwalletpayment();
     }

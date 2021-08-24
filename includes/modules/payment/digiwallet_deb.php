@@ -19,6 +19,7 @@ class digiwallet_deb extends digiwalletpayment
      */
     public function digiwallet_deb()
     {
+        $this->sort_order = 9;
         $this->config_code = "DEB";
         parent::digiwalletpayment();
     }

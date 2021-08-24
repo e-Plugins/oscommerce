@@ -18,6 +18,7 @@ class digiwallet_bw extends digiwalletpayment
      */
     public function digiwallet_bw()
     {
+        $this->sort_order = 4;
         $this->config_code = "BW";
         parent::digiwalletpayment();
     }

@@ -43,7 +43,7 @@ class ClientCore
 
     const ERR_NO_PAYMENT_METHOD = "Geen betalingsmethode meegegeven | No payment method given";
 
-    const ERR_NO_OUTLET_ID = "Geen DigiWallet Outlet Identifier bekend; controleer de module instellingen | No Digiwallet Outlet Identifier filled in, check the module settings";
+    const ERR_NO_OUTLET_ID = "Geen DigiWallet Outletcode bekend; controleer de module instellingen | No Digiwallet Outletcode filled in, check the module settings";
 
     const ERR_NO_API_TOKEN = "Geen DigiWallet API Token bekend; controleer de module instellingen | No Digiwallet API Token filled in, check the module settings";
 
